@@ -30,21 +30,21 @@
 
         .game-wrapper {
           background: var(--card-bg);
-          padding: 40px 30px; 
+          padding: 20px 30px; 
           border-radius: 20px;
           border: 1px solid var(--border-color);
           box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
           text-align: center;
           width: 100%;
           max-width: 400px;
-          min-height: 790px;
+          min-height: 800px;
           box-sizing: border-box;
           position: relative;
         }
 
         /* 訊息區域 */
         #result-area {
-          margin-bottom: 20px;
+          margin-bottom: 10px;
           height: 60px;
           display: flex;
           align-items: center;
@@ -57,11 +57,11 @@
           font-weight: bold;
         }
 
-        /* --- 倒數計時區：關鍵對齊修正 --- */
+        /* --- 倒數計時區 --- */
         .timer-area {
           width: 100%;
-          max-width: 220px; 
-          aspect-ratio: 200 / 60; 
+          max-width: 180px;
+          aspect-ratio: 200 / 60;
           background: url('https://images.plurk.com/3aMmUYdcZdgMBClnxf4Qir.png') center / 100% 100% no-repeat;
           margin: 0 auto 25px auto;
           position: relative;
@@ -70,25 +70,27 @@
         #static-zero, 
         #countdown-timer {
           font-family: "Courier New", monospace;
-          font-size: 2.8rem;
+          font-size: 2.3rem;
           font-weight: bold;
           color: #fbf9c2;
           letter-spacing: -2px;
           line-height: 1;
           position: absolute;
-          top: 55%; 
+          top: 53%;
           transform: translateY(-50%);
-          width: 35%; 
+          width: 35%;
           text-align: center;
+
+          /* --- 發光效果 --- */
+          text-shadow: 
+            0 0 5px rgba(251, 249, 194, 0.8), 
+            0 0 10px rgba(251, 249, 194, 0.5),
+            0 0 20px rgba(241, 196, 15, 0.3);
+          filter: brightness(1); 
         }
 
-        #static-zero {
-          left: 27%; 
-        }
-
-        #countdown-timer {
-          left: 60%; 
-        }
+        #static-zero { left: 28%; }
+        #countdown-timer { left: 60%; }
 
         /* 按鈕區域 */
         .button-grid {
@@ -127,7 +129,7 @@
           filter: grayscale(1) brightness(0.4);
         }
 
-        /* --- 時鐘顯示區：鎖定比例 --- */
+        /* 時鐘顯示區 */
         .clock-display-area {
           width: 100%;
           aspect-ratio: 16 / 9;
@@ -139,7 +141,7 @@
 
         .time-container {
           position: absolute;
-          top: 48%;
+          top: 48.5%;
           left: 49.5%;
           transform: translate(-50%, -50%);
           width: 100%;
@@ -150,9 +152,15 @@
           font-size: 0.85rem;
           font-weight: bold;
           color: var(--clock-blue);
-          text-shadow: 0 0 10px rgba(0,242,255,.8);
           letter-spacing: -1px;
           line-height: 1;
+
+          /* --- 藍色發光特效 --- */
+          text-shadow: 
+            0 0 5px rgba(215, 237, 233, 0.9),
+            0 0 10px rgba(88, 166, 255, 0.6),
+            0 0 15px rgba(88, 166, 255, 0.3);
+          filter: brightness(1);
         }
 
         #result-overlay {
@@ -165,10 +173,7 @@
           animation: resultAppear 1.2s ease-out forwards;
         }
 
-        @keyframes resultAppear {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
+        @keyframes resultAppear { from { opacity: 0; } to { opacity: 1; } }
 
         /* 控制按鈕 */
         .primary-btn, .secondary-btn {
@@ -208,7 +213,7 @@
         #best-solution-box {
           color: var(--clock-blue);
           background: rgba(88, 166, 255, 0.03); 
-          padding: 22px; 
+          padding: 20px; 
           border-radius: 4px;
           text-align: left;
           margin-top: 25px;
@@ -221,6 +226,12 @@
           border-bottom: 1px solid rgba(88, 166, 255, 0.08); 
           padding-bottom: 10px;
           align-items: flex-start;
+        }
+
+        .result-row:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+          padding-bottom: 0;
         }
 
         .result-row strong {
@@ -238,36 +249,22 @@
 
         #res-options, #res-steps { color: var(--primary-gold); }
 
-        /* RWD 微調 */
         @media (max-width: 400px) {
-          .game-wrapper {
-            padding: 30px 20px;
-          }
-          
-          #static-zero, #countdown-timer {
-            font-size: 1.9rem; 
-          }
+          .game-wrapper { padding: 30px 20px; }
+          #static-zero, #countdown-timer { font-size: 1.9rem; }
         }
     </style>
 </head>
 <body>
 
 <div class="game-wrapper">
-    <div id="result-area">
-        <p id="message">請點選按鈕或結束控時</p>
-    </div>
-
-    <div class="timer-area">
-        <span id="static-zero">00</span>
-        <span id="countdown-timer">30</span>
-    </div>
-
+    <div id="result-area"><p id="message">請點選按鈕或結束控時</p></div>
+    <div class="timer-area"><span id="static-zero">00</span><span id="countdown-timer">30</span></div>
+    
     <div class="button-grid" id="button-container"></div>
-
+    
     <div class="clock-display-area">
-        <div class="time-container">
-            <span id="current-time">00:00</span>
-        </div>
+        <div class="time-container"><span id="current-time">00:00</span></div>
         <div id="result-overlay"></div>
     </div>
 
@@ -275,8 +272,8 @@
         <button id="end-btn" class="secondary-btn">結束控時</button>
         <button id="next-btn" class="primary-btn" style="display:none;">下一題</button>
     </div>
-    
-    <div id="best-solution-container" style="display:none;">
+
+    <div id="best-solution-container">
         <div id="best-solution-box">
             <div class="result-row"><strong>初始時間：</strong><span id="res-initial"></span></div>
             <div class="result-row"><strong>可選選項：</strong><span id="res-options"></span></div>
@@ -287,192 +284,122 @@
 </div>
 
 <script>
-const optionsPool = [
-  { label: "10分", value: 10, img: "https://images.plurk.com/7pt8wSx3Xy07rygfZInZCr.png" }, 
-  { label: "30分", value: 30, img: "https://images.plurk.com/59uCWHf3M1RoPc1UXJgfnS.png" },
-  { label: "50分", value: 50, img: "https://images.plurk.com/1FaL0XeX7XAm0GXqpZnBUp.png" }, 
-  { label: "2時", value: 120, img: "https://images.plurk.com/1PQ11IRH876A1rqkCwqOcX.png" }, 
-  { label: "4時", value: 240, img: "https://images.plurk.com/3U1ODgTPfoziea90SFp3g7.png" },
-  { label: "9時", value: 540, img: "https://images.plurk.com/2KWgNVfYEGu2AJWt2cej3v.png" }, 
-  { label: "x2", value: "multiply", img: "https://images.plurk.com/3U2dQZsFpUMn00iElEUJb0.png" }
-];
+    const optionsPool = [
+      { label: "10分", value: 10, img: "https://images.plurk.com/7pt8wSx3Xy07rygfZInZCr.png" }, 
+      { label: "30分", value: 30, img: "https://images.plurk.com/59uCWHf3M1RoPc1UXJgfnS.png" },
+      { label: "50分", value: 50, img: "https://images.plurk.com/1FaL0XeX7XAm0GXqpZnBUp.png" }, 
+      { label: "2時", value: 120, img: "https://images.plurk.com/1PQ11IRH876A1rqkCwqOcX.png" }, 
+      { label: "4時", value: 240, img: "https://images.plurk.com/3U1ODgTPfoziea90SFp3g7.png" },
+      { label: "9時", value: 540, img: "https://images.plurk.com/2KWgNVfYEGu2AJWt2cej3v.png" }, 
+      { label: "x2", value: "multiply", img: "https://images.plurk.com/3U2dQZsFpUMn00iElEUJb0.png" }
+    ];
 
-const RESULT_IMAGES = {
-  PERFECT: "https://images.plurk.com/5zFNiX40JIIMuE0PtRb480.gif",
-  FAILED: "https://images.plurk.com/53KHwJqN2UmP7FetY8LwjV.gif",
-  OVER: "https://images.plurk.com/5Kg5s6ebU2vHDTBJ2ReXFn.gif ",
-  TIMEOUT: "https://images.plurk.com/5Kg5s6ebU2vHDTBJ2ReXFn.gif" 
-};
+    const RESULT_IMAGES = {
+      PERFECT: "https://images.plurk.com/5zFNiX40JIIMuE0PtRb480.gif",
+      FAILED: "https://images.plurk.com/53KHwJqN2UmP7FetY8LwjV.gif",
+      OVER: "https://images.plurk.com/5Kg5s6ebU2vHDTBJ2ReXFn.gif",
+      TIMEOUT: "https://images.plurk.com/5Kg5s6ebU2vHDTBJ2ReXFn.gif" 
+    };
 
-let currentMinutes = 0;
-let initialMinutes = 0;
-let currentButtons = [];
-let timerInterval;
-let timeLeft = 30;
-const TARGET = 710;
-const LIMIT = 720;
+    let currentMinutes = 0, initialMinutes = 0, currentButtons = [], timerInterval, timeLeft = 30;
+    const TARGET = 710, LIMIT = 720;
 
-function initGame() {
-  const randomStep = Math.floor(Math.random() * 67); 
-  initialMinutes = (randomStep * 10) + 30;
-  currentMinutes = initialMinutes;
-  
-  currentButtons = [];
-  for (let i = 0; i < 4; i++) {
-    const randomOpt = optionsPool[Math.floor(Math.random() * optionsPool.length)];
-    currentButtons.push({ ...randomOpt });
-  }
-
-  const overlay = document.getElementById('result-overlay');
-  if (overlay) {
-    overlay.style.display = "none";
-    overlay.style.backgroundImage = "none";
-  }
-
-  startTimer();
-  updateTimeDisplay();
-  renderButtons();
-  
-  document.getElementById('message').innerText = "請點選按鈕或結束控時";
-  document.getElementById('message').style.color = "#c9d1d9";
-  document.getElementById('best-solution-container').style.display = "none";
-  document.getElementById('next-btn').style.display = "none";
-  document.getElementById('end-btn').style.display = "block";
-  document.getElementById('end-btn').disabled = false;
-}
-
-function startTimer() {
-  clearInterval(timerInterval); 
-  timeLeft = 30;
-  const timerDisplay = document.getElementById('countdown-timer');
-  
-  if (timerDisplay) {
-    timerDisplay.innerText = timeLeft.toString().padStart(2, '0');
-  }
-
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    if (timerDisplay) {
-      timerDisplay.innerText = timeLeft.toString().padStart(2, '0');
+    function initGame() {
+      const randomStep = Math.floor(Math.random() * 67); 
+      initialMinutes = (randomStep * 10) + 30;
+      currentMinutes = initialMinutes;
+      currentButtons = [];
+      for (let i = 0; i < 4; i++) {
+        currentButtons.push({...optionsPool[Math.floor(Math.random() * optionsPool.length)]});
+      }
+      document.getElementById('result-overlay').style.display = "none";
+      startTimer();
+      updateTimeDisplay();
+      renderButtons();
+      document.getElementById('message').innerText = "請點選按鈕或結束控時";
+      document.getElementById('message').style.color = "#c9d1d9";
+      document.getElementById('best-solution-container').style.display = "none";
+      document.getElementById('next-btn').style.display = "none";
+      document.getElementById('end-btn').style.display = "block";
     }
-    if (timeLeft <= 0) {
+
+    function startTimer() {
       clearInterval(timerInterval);
-      finishGame(true); 
+      timeLeft = 30;
+      document.getElementById('countdown-timer').innerText = "30";
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('countdown-timer').innerText = timeLeft.toString().padStart(2, '0');
+        if (timeLeft <= 0) { clearInterval(timerInterval); finishGame(true); }
+      }, 1000);
     }
-  }, 1000);
-}
 
-function renderButtons() {
-  const container = document.getElementById('button-container');
-  container.innerHTML = '';
-  currentButtons.forEach((opt, index) => {
-    const btn = document.createElement('button');
-    const img = document.createElement('img');
-    img.src = opt.img;
-    img.alt = opt.label;
-    img.style.width = "100%";
-    img.style.height = "auto";
-    
-    btn.appendChild(img);
-    btn.onclick = () => applyEffect(index, btn);
-    container.appendChild(btn);
-  });
-}
-
-function updateTimeDisplay() {
-  const h = Math.floor(currentMinutes / 60);
-  const m = currentMinutes % 60;
-  document.getElementById('current-time').innerText = 
-    `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-}
-
-function applyEffect(index, btnElement) {
-  const opt = currentButtons[index];
-  if (opt.value === "multiply") currentMinutes *= 2;
-  else currentMinutes += opt.value;
-  
-  btnElement.disabled = true;
-  updateTimeDisplay();
-
-  if (currentMinutes >= LIMIT || currentMinutes === TARGET) {
-    finishGame();
-  }
-}
-
-function solveBest() {
-  let bestVal = -1;
-  let bestCombo = [];
-
-  function findSequence(currentTime, remainingButtons, currentPath) {
-    if (currentTime < LIMIT && currentTime > bestVal) {
-      bestVal = currentTime;
-      bestCombo = [...currentPath];
+    function renderButtons() {
+      const container = document.getElementById('button-container');
+      container.innerHTML = '';
+      currentButtons.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.innerHTML = `<img src="${opt.img}">`;
+        btn.onclick = () => {
+          if (opt.value === "multiply") currentMinutes *= 2; else currentMinutes += opt.value;
+          btn.disabled = true;
+          updateTimeDisplay();
+          if (currentMinutes >= LIMIT || currentMinutes === TARGET) finishGame();
+        };
+        container.appendChild(btn);
+      });
     }
-    for (let i = 0; i < remainingButtons.length; i++) {
-      let btn = remainingButtons[i];
-      let nextTime = (btn.value === "multiply") ? currentTime * 2 : currentTime + btn.value;
-      let nextRemaining = remainingButtons.filter((_, idx) => idx !== i);
-      findSequence(nextTime, nextRemaining, [...currentPath, btn.label]);
+
+    function updateTimeDisplay() {
+      const h = Math.floor(currentMinutes / 60), m = currentMinutes % 60;
+      document.getElementById('current-time').innerText = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
     }
-  }
 
-  findSequence(initialMinutes, currentButtons, []);
-  return { val: bestVal, combo: bestCombo };
-}
+    function solveBest() {
+      let bestVal = -1, bestCombo = [];
+      function find(cur, rem, path) {
+        if (cur < LIMIT && cur > bestVal) { bestVal = cur; bestCombo = [...path]; }
+        rem.forEach((btn, i) => {
+          find(btn.value === "multiply" ? cur * 2 : cur + btn.value, rem.filter((_, idx) => idx !== i), [...path, btn.label]);
+        });
+      }
+      find(initialMinutes, currentButtons, []);
+      return { val: bestVal, combo: bestCombo };
+    }
 
-function finishGame(isTimeout = false) {
-  clearInterval(timerInterval); 
-  
-  const msg = document.getElementById('message');
-  const best = solveBest();
-  const overlay = document.getElementById('result-overlay');
-  
-  document.getElementById('best-solution-container').style.display = "block";
+    function finishGame(isTimeout = false) {
+      clearInterval(timerInterval);
+      const best = solveBest();
+      const msg = document.getElementById('message');
+      const overlay = document.getElementById('result-overlay');
+      document.getElementById('best-solution-container').style.display = "block";
+      document.getElementById('res-initial').innerText = `${Math.floor(initialMinutes/60).toString().padStart(2,'0')}:${(initialMinutes%60).toString().padStart(2,'0')}`;
+      document.getElementById('res-options').innerText = currentButtons.map(b => b.label).join(' ');
+      document.getElementById('res-target').innerText = `${Math.floor(best.val/60).toString().padStart(2,'0')}:${(best.val%60).toString().padStart(2,'0')}`;
+      document.getElementById('res-steps').innerText = best.combo.join('➡️') || '無';
 
-  const startH = Math.floor(initialMinutes / 60);
-  const startM = initialMinutes % 60;
-  const startTimeStr = `${startH.toString().padStart(2, '0')}:${startM.toString().padStart(2, '0')}`;
-  
-  const optionsStr = currentButtons.map(btn => btn.label).join('　');
-  
-  const bh = Math.floor(best.val / 60);
-  const bm = best.val % 60;
-  const bestTimeStr = `${bh.toString().padStart(2, '0')}:${bm.toString().padStart(2, '0')}`;
+      overlay.style.display = "block";
+      if (isTimeout) {
+        msg.innerText = "💀 時間到！全圖殺 💀"; msg.style.color = "#ff4757";
+        overlay.style.backgroundImage = `url('${RESULT_IMAGES.TIMEOUT}')`;
+      } else if (currentMinutes < LIMIT && currentMinutes >= best.val) {
+        msg.innerText = "✨ 完美控時！ ✨"; msg.style.color = "#2ecc71";
+        overlay.style.backgroundImage = `url('${RESULT_IMAGES.PERFECT}')`;
+      } else if (currentMinutes >= LIMIT) {
+        msg.innerText = "💀 超過 12:00！全圖殺 💀"; msg.style.color = "#ff4757";
+        overlay.style.backgroundImage = `url('${RESULT_IMAGES.OVER}')`;
+      } else {
+        msg.innerText = "⚠️ 未達最佳解 ⚠️"; msg.style.color = "#f1c40f";
+        overlay.style.backgroundImage = `url('${RESULT_IMAGES.FAILED}')`;
+      }
+      document.querySelectorAll('#button-container button').forEach(b => b.disabled = true);
+      document.getElementById('end-btn').style.display = "none";
+      document.getElementById('next-btn').style.display = "block";
+    }
 
-  document.getElementById('res-initial').innerText = startTimeStr;
-  document.getElementById('res-options').innerText = optionsStr;
-  document.getElementById('res-target').innerText = bestTimeStr;
-  document.getElementById('res-steps').innerText = best.combo.join('➡️') || '不需控時';
-
-  if (overlay) overlay.style.display = "block";
-
-  if (isTimeout) {
-    msg.innerText = "💀 時間到！全圖殺 💀";
-    msg.style.color = "#ff4757";
-    if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.TIMEOUT}')`;
-  } else if (currentMinutes < LIMIT && currentMinutes >= best.val) {
-    msg.innerText = "✨ 完美控時！隊伍傷害提升 ✨";
-    msg.style.color = "#2ecc71";
-    if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.PERFECT}')`;
-  } else if (currentMinutes >= LIMIT) {
-    msg.innerText = "💀 超過12:00！全圖殺 💀";
-    msg.style.color = "#ff4757";
-    if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.OVER}')`;
-  } else {
-    msg.innerText = "⚠️ 未達最佳解，再接再厲 ⚠️";
-    msg.style.color = "#f1c40f";
-    if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.FAILED}')`;
-  }
-  
-  document.querySelectorAll('#button-container button').forEach(b => b.disabled = true);
-  document.getElementById('end-btn').style.display = "none";
-  document.getElementById('next-btn').style.display = "block";
-}
-
-document.getElementById('end-btn').onclick = () => finishGame(false);
-document.getElementById('next-btn').onclick = initGame;
-
-initGame();
+    document.getElementById('end-btn').onclick = () => finishGame(false);
+    document.getElementById('next-btn').onclick = initGame;
+    initGame();
 </script>
 
 </body>
