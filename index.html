@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Artale 困難拉圖斯控時練習器</title>
     <style>
         :root {
@@ -36,7 +36,7 @@
           box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
           text-align: center;
           width: 100%;
-          max-width: 400px; /* 電腦版寬度，手機版自動縮小 */
+          max-width: 400px;
           min-height: 790px;
           box-sizing: border-box;
           position: relative;
@@ -60,8 +60,8 @@
         /* --- 倒數計時區：關鍵對齊修正 --- */
         .timer-area {
           width: 100%;
-          max-width: 220px; /* 限制寬度使其在各裝置視覺效果一致 */
-          aspect-ratio: 200 / 60; /* 鎖定背景圖比例 */
+          max-width: 220px; 
+          aspect-ratio: 200 / 60; 
           background: url('https://images.plurk.com/3aMmUYdcZdgMBClnxf4Qir.png') center / 100% 100% no-repeat;
           margin: 0 auto 25px auto;
           position: relative;
@@ -70,24 +70,24 @@
         #static-zero, 
         #countdown-timer {
           font-family: "Courier New", monospace;
-          font-size: 2.2rem;
+          font-size: 2.8rem;
           font-weight: bold;
           color: #fbf9c2;
           letter-spacing: -2px;
           line-height: 1;
           position: absolute;
-          top: 55%; /* 垂直對齊底圖圓心 */
+          top: 55%; 
           transform: translateY(-50%);
-          width: 35%; /* 限制文字寬度確保在圓圈內 */
+          width: 35%; 
           text-align: center;
         }
 
         #static-zero {
-          left: 28%; /* 鎖定左邊圓圈位置 */
+          left: 27%; 
         }
 
         #countdown-timer {
-          left: 60%; /* 鎖定右邊圓圈位置 */
+          left: 60%; 
         }
 
         /* 按鈕區域 */
@@ -139,8 +139,8 @@
 
         .time-container {
           position: absolute;
-          top: 48.5%;
-          left: 50%;
+          top: 48%;
+          left: 49.5%;
           transform: translate(-50%, -50%);
           width: 100%;
         }
@@ -245,7 +245,7 @@
           }
           
           #static-zero, #countdown-timer {
-            font-size: 1.9rem; /* 手機端字體微調縮小 */
+            font-size: 1.9rem; 
           }
         }
     </style>
