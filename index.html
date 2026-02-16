@@ -1,4 +1,5 @@
-<html lang="zh-TW">
+<!DOCTYPE html>
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,29 +28,64 @@
 
         .game-wrapper {
             background: var(--card-bg);
-            padding: 40px;
+            padding: 40px; 
             border-radius: 20px;
             border: 1px solid var(--border-color);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
             text-align: center;
             width: 400px;
+            min-height: 790px; /* 固定高度，預留結算空間 */
         }
 
-        h1 {
-            font-size: 1.5rem;
-            color: var(--text-dim);
-            margin: 0 0 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .status-info {
-            color: var(--primary-gold);
+        /* 訊息區域 */
+        #result-area {
+            margin-top: 0;
             margin-bottom: 20px;
-            font-weight: bold;
         }
 
-        .status-info p { margin: 5px 0; }
+        #message {
+            margin-top: 0;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
+        /* 倒數計時區容器 */
+        .timer-area {
+            width: 100%;
+            height: 60px; 
+            background: url('https://images.plurk.com/3aMmUYdcZdgMBClnxf4Qir.png') center / 50% no-repeat;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            position: relative; 
+        }
+
+        .timer-container-fixed {
+            position: relative;
+            width: 200px; 
+            height: 100%;
+        }
+
+        #static-zero, 
+        #countdown-timer {
+            font-family: "Courier New", monospace;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fbf9c2;
+            letter-spacing: -2px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%) translateY(2px); 
+            width: 60px;
+            text-align: center;
+        }
+
+        #static-zero { left: 59px; }
+        #countdown-timer { left: 125px; }
+
+        /* 按鈕區域 */
         .button-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -88,6 +124,7 @@
             cursor: not-allowed;
         }
 
+        /* 時鐘顯示區 */
         .clock-display-area {
             width: 100%;
             aspect-ratio: 16 / 9;
@@ -99,7 +136,7 @@
 
         .time-container {
             position: absolute;
-            top: 50%;
+            top: 48.5%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 100%;
@@ -114,10 +151,22 @@
             letter-spacing: -2px;
         }
 
-        .controls {
-            margin-bottom: 20px;
+        #result-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            background: center / contain no-repeat;
+            pointer-events: none;
+            animation: resultAppear 1.2s ease-out forwards;
         }
 
+        @keyframes resultAppear {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 控制按鈕 */
         .primary-btn, .secondary-btn {
             padding: 15px;
             font-size: 1.1rem;
@@ -140,6 +189,7 @@
         .primary-btn:hover {
             background: #2ea043 !important;
             transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(46, 160, 67, 0.3);
         }
 
         .secondary-btn {
@@ -150,69 +200,105 @@
 
         .secondary-btn:hover {
             background: rgba(88, 166, 255, 0.1) !important;
-            transform: translateY(-2px);
         }
 
-        #result-area #message {
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        #best-solution {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-dim);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: left;
-            border-left: 4px solid var(--accent-blue);
-            white-space: pre-line;
-            margin-top: 10px;
-        }
-
-        /* 結算動畫 */
-        @keyframes resultAppear {
+        /* --- 動畫：純淡入 --- */
+        @keyframes fadeInOnly {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+
+        #best-solution-container {
+            display: none;
+            animation: fadeInOnly 0.5s ease-in-out forwards;
+        }
+
+        /* --- 最佳解對話框樣式 --- */
+        #best-solution-box {
+            color: var(--clock-blue);
+            background: rgba(88, 166, 255, 0.03); 
+            padding: 22px; 
+            border-radius: 4px;
+            text-align: left;
+            margin-top: 25px;
+            border: 1px solid rgba(88, 166, 255, 0.2);
+            box-shadow: inset 0 0 15px rgba(88, 166, 255, 0.05);
+        }
+
+        .result-row {
+            display: flex;
+            margin-bottom: 15px; 
+            border-bottom: 1px solid rgba(88, 166, 255, 0.08); 
+            padding-bottom: 10px;
+            align-items: flex-start;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .result-row strong {
+            min-width: 90px; 
+            font-size: 0.9rem; 
+            color: var(--clock-blue);
+            opacity: 0.75; 
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        #res-initial, #res-target {
+            font-family: "Courier New", monospace;
+            color: var(--clock-blue);
+            text-shadow: 0 0 10px rgba(215, 237, 233, 0.3);
+            font-weight: bold;
+            font-size: 1.05rem;
+            flex: 1;
+        }
+
+        #res-options, #res-steps {
+            font-family: "Courier New", monospace;
+            color: var(--primary-gold); 
+            text-shadow: 0 0 8px rgba(241, 196, 15, 0.3);
+            font-size: 1.05rem;           
+            line-height: 1.2;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        #res-options {
+            display: flex;
+            gap: 12px;      
+            flex-wrap: wrap; 
+        }
+
+        #res-steps {
+            word-break: break-all;
+            letter-spacing: 0px;
         }
     </style>
 </head>
 <body>
 
 <div class="game-wrapper">
-    <h1>Artale 困難拉圖斯控時練習器</h1>
-    
-    <div class="status-info">
-        <p>目標：逼近 11:50（不可超過）</p>
-    </div>
-
     <div id="result-area">
         <p id="message">請點選按鈕或結束控時</p>
     </div>
 
-    <div class="button-grid" id="button-container">
+    <div class="timer-area">
+        <div class="timer-container-fixed">
+            <span id="static-zero">00</span>
+            <span id="countdown-timer">30</span>
         </div>
+    </div>
+
+    <div class="button-grid" id="button-container"></div>
 
     <div class="clock-display-area">
         <div class="time-container">
             <span id="current-time">00:00</span>
         </div>
-        <div id="result-overlay" style="
-            display: none; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            z-index: 5; 
-            background-size: contain; 
-            background-repeat: no-repeat; 
-            background-position: center;
-            pointer-events: none;
-            animation: resultAppear 1.2s ease-out forwards;
-        "></div>
+        <div id="result-overlay"></div>
     </div>
 
     <div class="controls">
@@ -221,152 +307,203 @@
     </div>
     
     <div id="best-solution-container" style="display:none;">
-        <p id="best-solution"></p>
+        <div id="best-solution-box">
+            <div class="result-row"><strong>初始時間：</strong><span id="res-initial"></span></div>
+            <div class="result-row"><strong>可選選項：</strong><span id="res-options"></span></div>
+            <div class="result-row"><strong>最佳控時：</strong><span id="res-target"></span></div>
+            <div class="result-row"><strong>建議步驟：</strong><span id="res-steps"></span></div>
+        </div>
     </div>
 </div>
 
 <script>
-    const optionsPool = [
-        { label: "+10分", value: 10, img: "https://images.plurk.com/7pt8wSx3Xy07rygfZInZCr.png" }, 
-        { label: "+30分", value: 30, img: "https://images.plurk.com/59uCWHf3M1RoPc1UXJgfnS.png" },
-        { label: "+50分", value: 50, img: "https://images.plurk.com/1FaL0XeX7XAm0GXqpZnBUp.png" }, 
-        { label: "+2時", value: 120, img: "https://images.plurk.com/1PQ11IRH876A1rqkCwqOcX.png" }, 
-        { label: "+4時", value: 240, img: "https://images.plurk.com/3U1ODgTPfoziea90SFp3g7.png" },
-        { label: "+9時", value: 540, img: "https://images.plurk.com/2KWgNVfYEGu2AJWt2cej3v.png" }, 
-        { label: "x2", value: "multiply", img: "https://images.plurk.com/3U2dQZsFpUMn00iElEUJb0.png" }
-    ];
+const optionsPool = [
+  { label: "10分", value: 10, img: "https://images.plurk.com/7pt8wSx3Xy07rygfZInZCr.png" }, 
+  { label: "30分", value: 30, img: "https://images.plurk.com/59uCWHf3M1RoPc1UXJgfnS.png" },
+  { label: "50分", value: 50, img: "https://images.plurk.com/1FaL0XeX7XAm0GXqpZnBUp.png" }, 
+  { label: "2時", value: 120, img: "https://images.plurk.com/1PQ11IRH876A1rqkCwqOcX.png" }, 
+  { label: "4時", value: 240, img: "https://images.plurk.com/3U1ODgTPfoziea90SFp3g7.png" },
+  { label: "9時", value: 540, img: "https://images.plurk.com/2KWgNVfYEGu2AJWt2cej3v.png" }, 
+  { label: "x2", value: "multiply", img: "https://images.plurk.com/3U2dQZsFpUMn00iElEUJb0.png" }
+];
 
-    const RESULT_IMAGES = {
-        PERFECT: "https://images.plurk.com/5zFNiX40JIIMuE0PtRb480.gif",
-        FAILED: "https://images.plurk.com/53KHwJqN2UmP7FetY8LwjV.gif",
-        OVER: "https://images.plurk.com/5Kg5s6ebU2vHDTBJ2ReXFn.gif "
-    };
+const RESULT_IMAGES = {
+  PERFECT: "https://images.plurk.com/5zFNiX40JIIMuE0PtRb480.gif",
+  FAILED: "https://images.plurk.com/53KHwJqN2UmP7FetY8LwjV.gif",
+  OVER: "https://images.plurk.com/5Kg5s6ebU2vHDTBJ2ReXFn.gif ",
+  TIMEOUT: "https://images.plurk.com/5Kg5s6ebU2vHDTBJ2ReXFn.gif" 
+};
 
-    let currentMinutes = 0;
-    let initialMinutes = 0;
-    let currentButtons = [];
-    const TARGET = 710; 
-    const LIMIT = 720;  
+let currentMinutes = 0;
+let initialMinutes = 0;
+let currentButtons = [];
+let timerInterval;
+let timeLeft = 30;
+const TARGET = 710;
+const LIMIT = 720;
 
-    function initGame() {
-        const randomStep = Math.floor(Math.random() * 67); 
-        initialMinutes = (randomStep * 10) + 30;
-        currentMinutes = initialMinutes;
-        
-        currentButtons = [];
-        for (let i = 0; i < 4; i++) {
-            const randomOpt = optionsPool[Math.floor(Math.random() * optionsPool.length)];
-            currentButtons.push({ ...randomOpt });
-        }
+function initGame() {
+  const randomStep = Math.floor(Math.random() * 67); 
+  initialMinutes = (randomStep * 10) + 30;
+  currentMinutes = initialMinutes;
+  
+  currentButtons = [];
+  for (let i = 0; i < 4; i++) {
+    const randomOpt = optionsPool[Math.floor(Math.random() * optionsPool.length)];
+    currentButtons.push({ ...randomOpt });
+  }
 
-        const overlay = document.getElementById('result-overlay');
-        if (overlay) {
-            overlay.style.display = "none";
-            overlay.style.backgroundImage = "none";
-        }
+  const overlay = document.getElementById('result-overlay');
+  if (overlay) {
+    overlay.style.display = "none";
+    overlay.style.backgroundImage = "none";
+  }
 
-        updateTimeDisplay();
-        renderButtons();
-        
-        document.getElementById('message').innerText = "請點選按鈕或結束控時";
-        document.getElementById('message').style.color = "#c9d1d9";
-        document.getElementById('best-solution-container').style.display = "none";
-        document.getElementById('next-btn').style.display = "none";
-        document.getElementById('end-btn').style.display = "block";
-        document.getElementById('end-btn').disabled = false;
+  startTimer();
+  updateTimeDisplay();
+  renderButtons();
+  
+  document.getElementById('message').innerText = "請點選按鈕或結束控時";
+  document.getElementById('message').style.color = "#c9d1d9";
+  document.getElementById('best-solution-container').style.display = "none";
+  document.getElementById('next-btn').style.display = "none";
+  document.getElementById('end-btn').style.display = "block";
+  document.getElementById('end-btn').disabled = false;
+}
+
+function startTimer() {
+  clearInterval(timerInterval); 
+  timeLeft = 30;
+  const timerDisplay = document.getElementById('countdown-timer');
+  
+  if (timerDisplay) {
+    timerDisplay.innerText = timeLeft.toString().padStart(2, '0');
+  }
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    if (timerDisplay) {
+      timerDisplay.innerText = timeLeft.toString().padStart(2, '0');
     }
-
-    function renderButtons() {
-        const container = document.getElementById('button-container');
-        container.innerHTML = '';
-        currentButtons.forEach((opt, index) => {
-            const btn = document.createElement('button');
-            const img = document.createElement('img');
-            img.src = opt.img;
-            img.alt = opt.label;
-            btn.appendChild(img);
-            btn.onclick = () => applyEffect(index, btn);
-            container.appendChild(btn);
-        });
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      finishGame(true); 
     }
+  }, 1000);
+}
 
-    function updateTimeDisplay() {
-        const h = Math.floor(currentMinutes / 60);
-        const m = currentMinutes % 60;
-        document.getElementById('current-time').innerText = 
-            `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+function renderButtons() {
+  const container = document.getElementById('button-container');
+  container.innerHTML = '';
+  currentButtons.forEach((opt, index) => {
+    const btn = document.createElement('button');
+    const img = document.createElement('img');
+    img.src = opt.img;
+    img.alt = opt.label;
+    img.style.width = "100%";
+    img.style.height = "auto";
+    
+    btn.appendChild(img);
+    btn.onclick = () => applyEffect(index, btn);
+    container.appendChild(btn);
+  });
+}
+
+function updateTimeDisplay() {
+  const h = Math.floor(currentMinutes / 60);
+  const m = currentMinutes % 60;
+  document.getElementById('current-time').innerText = 
+    `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+}
+
+function applyEffect(index, btnElement) {
+  const opt = currentButtons[index];
+  if (opt.value === "multiply") currentMinutes *= 2;
+  else currentMinutes += opt.value;
+  
+  btnElement.disabled = true;
+  updateTimeDisplay();
+
+  if (currentMinutes >= LIMIT || currentMinutes === TARGET) {
+    finishGame();
+  }
+}
+
+function solveBest() {
+  let bestVal = -1;
+  let bestCombo = [];
+
+  function findSequence(currentTime, remainingButtons, currentPath) {
+    if (currentTime < LIMIT && currentTime > bestVal) {
+      bestVal = currentTime;
+      bestCombo = [...currentPath];
     }
-
-    function applyEffect(index, btnElement) {
-        const opt = currentButtons[index];
-        if (opt.value === "multiply") currentMinutes *= 2;
-        else currentMinutes += opt.value;
-        
-        btnElement.disabled = true;
-        updateTimeDisplay();
-
-        if (currentMinutes >= LIMIT || currentMinutes === TARGET) {
-            finishGame();
-        }
+    for (let i = 0; i < remainingButtons.length; i++) {
+      let btn = remainingButtons[i];
+      let nextTime = (btn.value === "multiply") ? currentTime * 2 : currentTime + btn.value;
+      let nextRemaining = remainingButtons.filter((_, idx) => idx !== i);
+      findSequence(nextTime, nextRemaining, [...currentPath, btn.label]);
     }
+  }
 
-    function solveBest() {
-        let bestVal = -1;
-        let bestCombo = [];
-        function findSequence(currentTime, remainingButtons, currentPath) {
-            if (currentTime < LIMIT && currentTime > bestVal) {
-                bestVal = currentTime;
-                bestCombo = [...currentPath];
-            }
-            for (let i = 0; i < remainingButtons.length; i++) {
-                let btn = remainingButtons[i];
-                let nextTime = (btn.value === "multiply") ? currentTime * 2 : currentTime + btn.value;
-                let nextRemaining = remainingButtons.filter((_, idx) => idx !== i);
-                findSequence(nextTime, nextRemaining, [...currentPath, btn.label]);
-            }
-        }
-        findSequence(initialMinutes, currentButtons, []);
-        return { val: bestVal, combo: bestCombo };
-    }
+  findSequence(initialMinutes, currentButtons, []);
+  return { val: bestVal, combo: bestCombo };
+}
 
-    function finishGame() {
-        const msg = document.getElementById('message');
-        const best = solveBest();
-        const overlay = document.getElementById('result-overlay');
-        
-        document.getElementById('best-solution-container').style.display = "block";
-        const bh = Math.floor(best.val / 60);
-        const bm = best.val % 60;
-        const bestTimeStr = `${bh.toString().padStart(2, '0')}:${bm.toString().padStart(2, '0')}`;
+function finishGame(isTimeout = false) {
+  clearInterval(timerInterval); 
+  
+  const msg = document.getElementById('message');
+  const best = solveBest();
+  const overlay = document.getElementById('result-overlay');
+  
+  document.getElementById('best-solution-container').style.display = "block";
 
-        if (overlay) overlay.style.display = "block";
+  const startH = Math.floor(initialMinutes / 60);
+  const startM = initialMinutes % 60;
+  const startTimeStr = `${startH.toString().padStart(2, '0')}:${startM.toString().padStart(2, '0')}`;
+  
+  const optionsStr = currentButtons.map(btn => btn.label).join('　');
+  
+  const bh = Math.floor(best.val / 60);
+  const bm = best.val % 60;
+  const bestTimeStr = `${bh.toString().padStart(2, '0')}:${bm.toString().padStart(2, '0')}`;
 
-        if (currentMinutes < LIMIT && currentMinutes >= best.val) {
-            msg.innerText = "✨ 完美控時！隊伍傷害提升 ✨";
-            msg.style.color = "#2ecc71";
-            if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.PERFECT}')`;
-        } else if (currentMinutes >= LIMIT) {
-            msg.innerText = "💀 超過12:00！全圖殺 💀";
-            msg.style.color = "#ff4757";
-            if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.OVER}')`;
-        } else {
-            msg.innerText = "未達最佳解，再接再厲";
-            msg.style.color = "#f1c40f";
-            if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.FAILED}')`;
-        }
+  document.getElementById('res-initial').innerText = startTimeStr;
+  document.getElementById('res-options').innerText = optionsStr;
+  document.getElementById('res-target').innerText = bestTimeStr;
+  document.getElementById('res-steps').innerText = best.combo.join('➡️') || '不需控時';
 
-        document.getElementById('best-solution').innerText = 
-            `本題最佳解：${bestTimeStr}\n建議步驟：${best.combo.join(' -> ') || '不需控時'}`;
-        
-        document.querySelectorAll('#button-container button').forEach(b => b.disabled = true);
-        document.getElementById('end-btn').style.display = "none";
-        document.getElementById('next-btn').style.display = "block";
-    }
+  if (overlay) overlay.style.display = "block";
 
-    document.getElementById('end-btn').onclick = finishGame;
-    document.getElementById('next-btn').onclick = initGame;
+  if (isTimeout) {
+    msg.innerText = "💀 時間到！全圖殺 💀";
+    msg.style.color = "#ff4757";
+    if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.TIMEOUT}')`;
+  } else if (currentMinutes < LIMIT && currentMinutes >= best.val) {
+    msg.innerText = "✨ 完美控時！隊伍傷害提升 ✨";
+    msg.style.color = "#2ecc71";
+    if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.PERFECT}')`;
+  } else if (currentMinutes >= LIMIT) {
+    msg.innerText = "💀 超過12:00！全圖殺 💀";
+    msg.style.color = "#ff4757";
+    if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.OVER}')`;
+  } else {
+    msg.innerText = "⚠️ 未達最佳解，再接再厲 ⚠️";
+    msg.style.color = "#f1c40f";
+    if (overlay) overlay.style.backgroundImage = `url('${RESULT_IMAGES.FAILED}')`;
+  }
+  
+  document.querySelectorAll('#button-container button').forEach(b => b.disabled = true);
+  document.getElementById('end-btn').style.display = "none";
+  document.getElementById('next-btn').style.display = "block";
+}
 
-    initGame();
+document.getElementById('end-btn').onclick = () => finishGame(false);
+document.getElementById('next-btn').onclick = initGame;
+
+initGame();
 </script>
+
 </body>
 </html>
